@@ -35,3 +35,45 @@
     6.  封装：在子类中添加额外的属性和方法
     7.  多态：子类重写父类的方法，相同命名即可
     8.  继承这里涉及原型链的知识，建议阅读本目录下的《深入理解原型》的md笔记
+    9.  在类里面通过this定义的属性，将在实例化的时候被实例化对象所获取
+        ```js
+            function Accommodation(){
+                this.isAlarmed = false;
+            }
+            var myHouse = new Accommodation();
+            console.log(myHouse.isAlarmed); //false;
+            console.log(Accommodation.isAlarmed); //undefined;
+        ```
+    10. apply和call: 一般是一个函数.apply(对象,参数数组)或者一个函数.call(对象,参数1,参数2...)
+        ```js
+            function Accommodation() {
+                this.isAlarmed = false;
+            }
+
+            var AlarmSystem = {
+                arm: function(message) {
+                    this.isAlarmed = true;
+                    console.log("TCL: arm -> ", message);
+                },
+                disarm: function(message) {
+                    this.isAlarmed = false;
+                    console.log("TCL: disarm -> ", message);
+                }
+            };
+
+            var myHouse = new Accommodation();
+            AlarmSystem.arm.call(myHouse, "Alarm activated");
+            console.log("TCL: myHouse.isAlarmed", myHouse.isAlarmed);
+            AlarmSystem.arm.apply(myHouse, ["Alarm deactivated"]);
+            console.log("TCL: myHouse.isAlarmed", myHouse.isAlarmed);
+            
+            // 一般apply和call可以用来继承父类的方法
+        ```
+    11. arguments伪数组，没有数组方法，需要使用数组方法，可以通过循环把它转换成一个数组
+    12. 发现一个有趣的问题，关于函数和对象的相互初始化问题，直接贴代码
+        ```js
+            var a = {c: 1};
+            a = function(){console.log(a.c)}
+            var b = function(){console.log(b.c)}
+            b.c = 1;
+        ```
