@@ -76,4 +76,53 @@
             a = function(){console.log(a.c)}
             var b = function(){console.log(b.c)}
             b.c = 1;
+            console.log("a: ",a);    // a:  ƒ (){console.log(a.c)}
+            console.log("a.c: ",a.c);    // a.c:  undefined
+            console.log("b: ",b);    // b:  ƒ (){console.log(b.c)}
+            console.log("b.c: ",b.c);   //   b.c:  1
         ```
+    13. 封装一个Class用于创建类、继承和多态等，详见demo09-Class.js
+
+## ES5的一些用法
+1. JSON: JSON.parse(jsonString) & JSON.stringify(jsonObj)
+2. "use strict": 函数第一行或者js文件第一行 - 不能用eval、with，同一作用域下同名变量，delete非对象的方法和属性等
+3. 函数绑定: this的变化
+    ```js
+        var header = document.createElement("header"),
+            mouseState = "up",
+            eventHandlers = {
+              onClick: function() {
+                  console.log("this -> ",this);
+                  this.onMouseDown();
+                  this.onMouseUp();
+              },
+              onMouseDown: function() {
+                  mouseState = "down";
+              },
+              onMouseUp: function() {
+                  mouseState = "up";
+              }
+            };
+      header.style =
+          "position:fixed;width:100%;height: 200px;z-index:1000;background:lightblue;top:0;left:0";
+      <!-- header.addEventListener("click", eventHandlers.onClick, false);   //这里的this指向这个DOM元素 -->
+      header.addEventListener("click", eventHandlers.onClick.bind(eventHandlers), false);   //这里把eventHandlers 传入为this
+
+      document.body.appendChild(header);
+    ```
+4. 数组方法
+   1. Array.isArray(arr);
+   2. Array.prototype.forEach((item, index, fullArr)=>{})
+   3. Array.prototype.every((item, index, fullArr)=>{}): 如果每个都return true则这个函数结果返回true；如果一个return false，则停止，返回false
+   4. Array.prototype.some((item, index, fullArr)=>{}): 如果有个return true则停止，这个函数结果返回true；否则都是return false，返回false
+   5. Array.prototype.filter((item, index, fullArr)=>{}): 返回一个满足条件过滤的数组
+5. 对象方法
+   1. Object.isExtensible(obj): 对象是否可拓展，已有属性可以修改
+   2. Object.preventExtensible(obj): 阻止对象可拓展，已有属性可以修改
+   3. Object.freeze(obj): 已有属性冻结，同时对象不能扩展
+   4. Object.isFrozen(obj): 对象是否已冻结，同时对象不能扩展
+   5. Object.getOwnPropertyDescriptor(obj, attr): 返回一个包含configurable,enumerable,value,writable的对象，其中除了value其他默认为true
+   6. Object.defineProperty(obj, attr, {value: value,writable: boolean,enumerable: boolean, configurable: boolean}): 定义属性
+   7. Object.defineProperty(obj, {attr1: {value: value,writable: boolean,enumerable: boolean, configurable: boolean},attr2: {value: value,writable: boolean,enumerable: boolean, configurable: boolean}})
+   8. Object.keys(obj): 得到keys数组
+   9. Object.create(obj): 以obj为模型创建对象，这个其实是把新建的newObj的__proto__指向obj
