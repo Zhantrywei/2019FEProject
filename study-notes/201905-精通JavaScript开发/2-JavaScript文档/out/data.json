@@ -1,0 +1,228 @@
+{
+    "project": {},
+    "files": {
+        "demo01-yuiTest.js": {
+            "name": "demo01-yuiTest.js",
+            "modules": {
+                "Accommodation-foo": 1
+            },
+            "classes": {
+                "YUIDoc": 1,
+                "Accommodation": 1,
+                "House": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "Accommodation-related": {
+            "name": "Accommodation-related",
+            "submodules": {
+                "Accommodation-foo": 1
+            },
+            "elements": {
+                "x-foo": 1
+            },
+            "classes": {
+                "YUIDoc": 1,
+                "Accommodation": 1,
+                "House": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "file": "demo01-yuiTest.js",
+            "line": 108
+        },
+        "Accommodation-foo": {
+            "name": "Accommodation-foo",
+            "submodules": {},
+            "elements": {
+                "x-foo": 1
+            },
+            "classes": {
+                "YUIDoc": 1,
+                "Accommodation": 1,
+                "House": 1
+            },
+            "fors": {},
+            "is_submodule": 1,
+            "namespaces": {},
+            "module": "Accommodation-related",
+            "namespace": "",
+            "file": "demo01-yuiTest.js",
+            "line": 108,
+            "description": "与住宅相关的各种“类”",
+            "tag": "main",
+            "itemtype": "main"
+        }
+    },
+    "classes": {
+        "YUIDoc": {
+            "name": "YUIDoc",
+            "shortname": "YUIDoc",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Accommodation-related",
+            "file": "demo01-yuiTest.js",
+            "line": 1,
+            "description": "## This is the __module__ description for the `YUIDoc` module.\n\n> [YUIDoc](http://yui.github.io/yuidoc/)\n>\n> [YUIDoc - github](https://github.com/yui/yuidoc)\n>\n \n   ```js\n        var options = {\n            paths: [ './lib' ],\n            outdir: './out'\n        };\n\n        var Y = require('yuidoc');\n        var json = (new Y.YUIDoc(options)).run();\n   ```",
+            "mainName": "yuidoc",
+            "tag": "main",
+            "itemtype": "main",
+            "_main": true,
+            "submodule": "Accommodation-foo"
+        },
+        "Accommodation": {
+            "name": "Accommodation",
+            "shortname": "Accommodation",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Accommodation-related",
+            "submodule": "Accommodation-foo",
+            "namespace": "",
+            "file": "demo01-yuiTest.js",
+            "line": 32,
+            "description": "定义各种类型住宅的“类”",
+            "is_constructor": 1,
+            "example": [
+                "\n    var myAccommodation = new Accommodation();"
+            ]
+        },
+        "House": {
+            "name": "House",
+            "shortname": "House",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Accommodation-related",
+            "submodule": "Accommodation-foo",
+            "namespace": "",
+            "file": "demo01-yuiTest.js",
+            "line": 108,
+            "description": "表示房子的“类”，这是一种特色类型的住宅",
+            "is_constructor": 1,
+            "extends": "Accommodation",
+            "example": [
+                "\n     var myHouse = new House();"
+            ]
+        }
+    },
+    "elements": {
+        "x-foo": {
+            "name": "x-foo",
+            "attributes": [],
+            "module": "Accommodation-related",
+            "submodule": "Accommodation-foo"
+        }
+    },
+    "classitems": [
+        {
+            "file": "demo01-yuiTest.js",
+            "line": 43,
+            "description": "标明住宅当前是否上锁",
+            "itemtype": "property",
+            "name": "_isLocked",
+            "type": "Boolean",
+            "access": "protected",
+            "tagname": "",
+            "class": "Accommodation",
+            "module": "Accommodation-related",
+            "submodule": "Accommodation-foo"
+        },
+        {
+            "file": "demo01-yuiTest.js",
+            "line": 51,
+            "description": "给住宅上锁",
+            "itemtype": "method",
+            "name": "lock",
+            "example": [
+                "\n     var myAccommodation = new Accommodation();\n     myAccommodation.lock();"
+            ],
+            "class": "Accommodation",
+            "module": "Accommodation-related",
+            "submodule": "Accommodation-foo"
+        },
+        {
+            "file": "demo01-yuiTest.js",
+            "line": 63,
+            "description": "给住宅解锁",
+            "itemtype": "method",
+            "name": "unlock",
+            "example": [
+                "\n     var myAccommodation = new Accommodation();\n     myAccommodation.unlock();"
+            ],
+            "class": "Accommodation",
+            "module": "Accommodation-related",
+            "submodule": "Accommodation-foo"
+        },
+        {
+            "file": "demo01-yuiTest.js",
+            "line": 75,
+            "description": "确定住宅当前是否上锁",
+            "itemtype": "method",
+            "name": "getIsLocked",
+            "return": {
+                "description": "该值表示锁的状态——true表示已上锁",
+                "type": "Boolean"
+            },
+            "example": [
+                "\n     var myAccommodation = new Accommodation();\n     myAccommodation.getIsLocked();  // false",
+                "\n     var myAccommodation = new Accommodation();\n     myAccommodation.lock();\n     myAccommodation.getIsLocked(); // true"
+            ],
+            "class": "Accommodation",
+            "module": "Accommodation-related",
+            "submodule": "Accommodation-foo"
+        },
+        {
+            "file": "demo01-yuiTest.js",
+            "line": 93,
+            "description": "创建该“类”的对象实例时会自动执行本方法对住宅进行解锁",
+            "itemtype": "method",
+            "name": "initialize",
+            "class": "Accommodation",
+            "module": "Accommodation-related",
+            "submodule": "Accommodation-foo"
+        },
+        {
+            "file": "demo01-yuiTest.js",
+            "line": 118,
+            "description": "表示房子警报是否开启——true表示已开启",
+            "itemtype": "property",
+            "name": "isAlarmed",
+            "type": "Boolean",
+            "class": "House",
+            "module": "Accommodation-related",
+            "submodule": "Accommodation-foo"
+        },
+        {
+            "file": "demo01-yuiTest.js",
+            "line": 125,
+            "description": "启动房子的警报",
+            "itemtype": "method",
+            "name": "alarm",
+            "class": "House",
+            "module": "Accommodation-related",
+            "submodule": "Accommodation-foo"
+        },
+        {
+            "file": "demo01-yuiTest.js",
+            "line": 135,
+            "description": "给房子上锁并启动警报",
+            "itemtype": "method",
+            "name": "lock",
+            "class": "House",
+            "module": "Accommodation-related",
+            "submodule": "Accommodation-foo"
+        }
+    ],
+    "warnings": []
+}
