@@ -115,7 +115,13 @@
 10. 图片：\![图片名](url\)
 11. 分割线：用三个***
 12. 表格
-    | column0 | 1 | column2 |
-    | :------ | :-----: | ------: |
-    | aaa     |   bbb   |     ccc |
-    | ddd     |   eee   |     fff |
+    | column0 |   1   | column2 |
+    | :------ | :---: | ------: |
+    | aaa     |  bbb  |     ccc |
+    | ddd     |  eee  |     fff |
+    ```md
+        | column0 |   1   | column2 |
+        | :------ | :---: | ------: |
+        | aaa     |  bbb  |     ccc |
+        | ddd     |  eee  |     fff |
+    ```
