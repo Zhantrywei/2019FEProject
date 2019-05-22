@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>委托事件至父元素</title>
+        <style>
+            #one {
+                width: 400px;
+                height: 400px;
+                background: lightblue;
+            }
+            #two {
+                width: 300px;
+                height: 300px;
+                background: lightcoral;
+            }
+            #three {
+                width: 200px;
+                height: 200px;
+                background: lightgoldenrodyellow;
+            }
+            #four {
+                width: 100px;
+                height: 100px;
+                background: lightgreen;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="header"></div>
+        <div id="one">
+            <div id="two">
+                <div id="three">
+                    <div id="four">four</div>
+                    three
+                </div>
+                two
+            </div>
+            one
+        </div>
+        <ol id="noteList">
+            <li>先捕获在冒泡,true为捕获,false或者不填为冒泡</li>
+            <li>
+                <strong>事件委托</strong>:
+                利用冒泡在多子元素的父元素上绑定对应事件处理函数,处理多个子元素的事件响应.通过利用事件委托,可以确保当页面加载时只需要添加少量的事件至页面元素,从而减少了DOM元素的访问并提升了性能.这有助于实现减少最终用户能够与页面进行交互所需要的事件这一总体目标
+            </li>
+            <li>
+                框架化处理频发事件:
+                例如mousemove,touchmove,scroll,resize等频发事件,需要把事件处理函数赋值给变量,然后设置定时器取这个变量进行事件处理
+            </li>
+        </ol>
+    </body>
+    <script>
+        var one = document.getElementById("one");
+        var two = document.getElementById("two");
+        var three = document.getElementById("three");
+        var four = document.getElementById("four");
+        one.addEventListener(
+            "click",
+            function() {
+                console.log("one 捕获");
+            },
+            true
+        );
+        two.addEventListener(
+            "click",
+            function() {
+                console.log("two 捕获");
+            },
+            true
+        );
+        three.addEventListener(
+            "click",
+            function() {
+                console.log("three 捕获");
+            },
+            true
+        );
+        four.addEventListener(
+            "click",
+            function() {
+                console.log("four 捕获");
+            },
+            true
+        );
+        one.addEventListener("click", function() {
+            console.log("one 冒泡");
+        });
+        two.addEventListener("click", function() {
+            console.log("two 冒泡");
+        });
+        three.addEventListener("click", function() {
+            console.log("three 冒泡");
+        });
+        four.addEventListener("click", function() {
+            console.log("four 冒泡");
+        });
+
+        var noteList = document.getElementById("noteList");
+        noteList.addEventListener("click", onClick, false);
+        function onClick() {
+            var clickItem = event.target;
+            if (clickItem) {
+                console.log(clickItem.innerText);
+            }
+        }
+
+        var scrollTopPosition = 0,
+            scrollLeftPosition = 0,
+            docElem = document.documentElement,
+            body = document.body,
+            header = document.getElementById("header");
+
+        function onScroll() {
+            console.log("TCL: onScroll -> docElem.scrollTop", docElem.scrollTop)
+            console.log("TCL: onScroll -> window.pageYOffset", window.pageYOffset)
+            console.log("TCL: onScroll -> body.scrollTop", body.scrollTop)
+            scrollTopPosition = docElem.scrollTop || window.pageYOffset ||body.scrollTop;
+            scrollLeftPosition = docElem.scrollLeft || window.pageXOffset ||body.scrollLeft;
+        }
+
+        function writeScrollPostion() {
+            header.innerHTML =
+                scrollTopPosition + "px, " + scrollLeftPosition + "px";
+        }
+
+        document.addEventListener("scroll", onScroll, false);
+
+        window.setInterval(writeScrollPostion, 500);
+    </script>
+</html>
