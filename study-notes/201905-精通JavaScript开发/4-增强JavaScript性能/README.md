@@ -108,3 +108,74 @@
       2. document
          1. document.scrollingElement
          2. document.documentElement.scroll()
+
+## 提升函数性能（减少所执行都代码行数，用对象保存运行过的函数返回值）
+1. 同一函数相同参数执行多次优化为执行一次，使用对象直接量进行属性值存取，使函数有记忆功能
+    ```js
+        // 无记忆功能的
+        function getFactorial(num){
+            var result = 1,
+                index = 1;
+            for(;index <= num;index ++){
+                result *= index;
+            }
+            return result;
+        }
+        getFactorial(3);
+        getFactorial(3);
+        getFactorial(3);
+        // 这个行数执行3次
+
+        // 有记忆功能的函数
+        function getFactorial(num){
+            var result = 1,
+                index = 1;
+            if(!getFactorial.storage){
+                getFactorial.storage = {};
+            }else if(getFactorial.storage[num]){
+                return getFactorial.storage[num];
+            }
+            for(; index <= num; index++){
+                result *= index;
+            }
+
+            getFactorial.storage[num] = result;
+            return result;
+        }
+        getFactorial(3);
+        getFactorial(3);
+        getFactorial(3);
+        // 执行一次，后边两次都是值直接返回
+    ```
+2. 建立一个功能函数来为任一函数添加保存处理结果值的功能，尽量从函数内部用作存储功能的属性中自动返回函数的结果以增强性能
+    ```js
+        function memoize(fn){
+            return function(){
+                var propertyName;
+                fn.storage = fn.storage || {};
+
+                propertyName = Array.prototype.join.call(arguments, "|");
+                if(propertyName in fn.storage){
+                    return fn.storage[propertyName];
+                }else{
+                    fn.storage[propertyName] = fn.apply(this, arguments);
+                    return fn.storage[propertyName];
+                }
+            }
+        }
+    ```
+3. 应用一般性记忆功能至函数
+    ```js
+        function getFactorial(num){
+            var result = 1,
+                index = 1;
+            for(;index <= num; index++){
+                result *= index;
+            }
+            return result;
+        }
+        var getFactorialMemoized = memoize(getFactorial);
+        console.log(getFactorialMemoized(50));
+        console.log(getFactorialMemoized(50));
+    ```
+4. 对计算密集型函数非常有效，能显著提升性能
