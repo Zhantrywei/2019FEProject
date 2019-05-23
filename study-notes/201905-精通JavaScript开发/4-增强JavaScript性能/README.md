@@ -97,6 +97,30 @@
 1. 事件委托: 利用冒泡在多子元素的父元素上绑定对应事件处理函数,处理多个子元素的事件响应,有利于添加少量事件至页面元素,减少DOM元素的访问
 2. 先捕获后冒泡,有监听则出现
 3. 框架化处理频发事件: 例如mousemove,touchmove,scroll,resize等频发事件,需要把事件处理函数赋值给变量,然后设置定时器取这个变量进行事件处理
+   ```js
+        var scrollTopPosition = 0,
+            scrollLeftPosition = 0,
+            docElem = document.documentElement,
+            body = document.body,
+            header = document.getElementById("header");
+
+        function onScroll() {
+            console.log("TCL: onScroll -> docElem.scrollTop", docElem.scrollTop)
+            console.log("TCL: onScroll -> window.pageYOffset", window.pageYOffset)
+            console.log("TCL: onScroll -> body.scrollTop", body.scrollTop)
+            scrollTopPosition = docElem.scrollTop || window.pageYOffset ||body.scrollTop;
+            scrollLeftPosition = docElem.scrollLeft || window.pageXOffset ||body.scrollLeft;
+        }
+
+        function writeScrollPostion() {
+            header.innerHTML =
+                scrollTopPosition + "px, " + scrollLeftPosition + "px";
+        }
+
+        document.addEventListener("scroll", onScroll, false);
+
+        window.setInterval(writeScrollPostion, 500);
+   ```
 4. 附加: 滚动问题
    1. overflow为可滚动时,如果高度/宽度超过容器,则会出现滚动条
    2. scroll相关的
@@ -106,8 +130,16 @@
          3. window.scrollBy(x,y)
          4. window.scrollX|scrollY
       2. document
-         1. document.scrollingElement
-         2. document.documentElement.scroll()
+         1. document.doctype: <!docutype html> 都是小写
+         2. document.documentElement: \<html>\</html> 
+         3. document.title: \<title>\</title>
+         4. document.head: \<head>\</head>
+         5. document.body: \<body>\</body>
+         6. document.scrollingElement: 标准模式返回根元素(document.documentElement); 怪异模式下返回body或者null
+            > [浏览器的标准模式与怪异模式的设置与区分方法](https://www.cnblogs.com/front-end-develop/p/5850230.html)
+         7. element.scroll(x,y): 废弃; 用scrollTo(x,y) 滚动到;
+         8. element.scrollBy(x,y): 一次滚动多少;
+         9. element.scroll
 
 ## 提升函数性能（减少所执行都代码行数，用对象保存运行过的函数返回值）
 1. 同一函数相同参数执行多次优化为执行一次，使用对象直接量进行属性值存取，使函数有记忆功能
@@ -158,6 +190,7 @@
                 if(propertyName in fn.storage){
                     return fn.storage[propertyName];
                 }else{
+                    console.log("this: ",this);
                     fn.storage[propertyName] = fn.apply(this, arguments);
                     return fn.storage[propertyName];
                 }

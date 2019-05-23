@@ -6,10 +6,23 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <title>委托事件至父元素</title>
         <style>
+            ::-webkit-scrollbar{
+                display: none;
+            }
+            html,body{
+                width: 800px;
+                height: 800px;
+                overflow: auto;
+                padding: 0;
+                margin: 0;
+            }
             #one {
-                width: 400px;
-                height: 400px;
+                width: 200px;
+                height: 200px;
+                overflow: auto;
                 background: lightblue;
+                padding: 20px;
+                margin: 20px;
             }
             #two {
                 width: 300px;
@@ -26,9 +39,22 @@
                 height: 100px;
                 background: lightgreen;
             }
+            ol{
+                width: 1000px;
+            }
+            .testSpan{
+                background: lightblue;
+                line-height: 3;
+                max-width: 100px;
+                overflow: auto;
+                white-space: nowrap;
+                display: inline-block;
+            }
         </style>
     </head>
     <body>
+        <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
+        <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
         <div id="header"></div>
         <div id="one">
             <div id="two">
@@ -40,6 +66,7 @@
             </div>
             one
         </div>
+        <div class="testSpan"><span>I am a span.I am a span.I am a span.I am a span.I am a span.</span></div>
         <ol id="noteList">
             <li>先捕获在冒泡,true为捕获,false或者不填为冒泡</li>
             <li>
@@ -51,6 +78,8 @@
                 例如mousemove,touchmove,scroll,resize等频发事件,需要把事件处理函数赋值给变量,然后设置定时器取这个变量进行事件处理
             </li>
         </ol>
+        <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
+        <p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p><p>test</p>
     </body>
     <script>
         var one = document.getElementById("one");
