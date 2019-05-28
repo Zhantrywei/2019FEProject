@@ -212,3 +212,58 @@
         console.log(getFactorialMemoized(50));
     ```
 4. 对计算密集型函数非常有效，能显著提升性能
+
+## 使用正则表达式实现更快速的字符串操作
+1. 定义正则：建议使用直接量表达式，动态生成才需要用构造函数
+    ```js
+        var caps1 = new RegExp("[A-Z]","g");
+        var caps2 = /[A-Z]/g;
+    ```
+2. 正则常用特殊字符
+    1. \[exp]: 任一字符
+    2. \[^exp]: 排除这一字符
+    3. \[exp1-exp2]: 匹配至
+    4. \(exp): 分组匹配，指定次序确切匹配
+    5. \(exp1|exp2): 或者
+    6. exp+: 1+
+    7. exp*: 0+
+    8. exp?: 0|1
+    9. \s: 匹配空白字符（空格、回车、换行、换页）
+    10. \S: 匹配除空白字符以为任一字符
+    11. \d: 匹配0~9
+    12. \D: 匹配除了数字以外
+    13. \w: 匹配一个文字字符（汉字、数字、字母）
+    14. \W: 匹配文字字符以外
+3. 修饰符
+    1. g: 全局匹配，不只返回第一个匹配项
+    2. i: 忽略大小写
+    3. m: 多行匹配
+4. 字符串方法关于正则
+    ```js
+        var regEx = /[A-M]/g,
+            string = "The Great Escape",
+            match,
+            search,
+            replace;
+        match = string.match(regEx); // 返回一个数组 ["G","E"]
+        search = string.search(regEx);  // 返回第一个匹配的索引值 4
+        replace = string.replace(regEx,"_");    // "The _reat _scape"
+    ```
+    1. replace方法详解
+        1. $$: "Hello World".replace(/o/g,"$$"); // "Hell$ W$rld"
+        2. $&: "Hello World".replace(/o/g, "v$&a");  // "Hellvoa Wvoarld" 主要用于在找到的字符串前后添加
+        3. $\`: "Hello World".replace(/o/g,"$\`");  // "HellHell WHello Wrld" 用匹配到的前边部分代替匹配到的值
+        4. $\': "Hello World".replace(/o/g,"$\'");  // "Hell World Wrldrld
+        5. $1,$2,...: "Hello World".replace(/(o)(\s)/g,"$1$1$2")    // "Helloo World" 小括号分组时，实现提取出特定表达式所匹配的子字符串,先把匹配的拿出来，然后把对应的分组放进去
+        6. replace(正则，函数): 每匹配一个就会执行一次函数，并传入所匹配的子字符串，会使用函数的返回值替换原子字符串
+            ```js
+                var count = 0;
+                function replaceWithCount(value){
+                    count++;
+                    return value + count;
+                }
+                console.log("Hello World".replace(/o/g,replaceWithCount));  //Hello1 Wo2rld
+                console.log("Hello World".replace(/o/g,replaceWithCount));  //Hello3 Wo4rld
+            ```
+
+## 更快速地使用数组
