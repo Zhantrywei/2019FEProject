@@ -270,5 +270,38 @@
 1. 用变量存储length,避免总是从数组中拿取
 2. 对大量数据最快速的迭代方式是反向while循环(reserve-while)
    ```js
-        //  反向循环比for快速的原因:
+        //  反向循环比for快速的原因: 在for循环中的每一轮迭代循环中,js解释器都会对index<length进行一次比较,来停止循环,而while循环,循环停止的时刻是当while为逻辑假值
+        var daysOfWeek = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],len = daysOfWeek.length,index =len,daysOfWeekInReverse=[];
+        while(index--){
+            daysOfWeekInReverse.push(daysOff[index]);
+        }
+        console.log(index); // -1
    ```
+3. 避免在循环中创建函数,因为每一次迭代创建函数会增加内存负担
+    ```js
+        /**
+           for(){
+               function(){
+
+               }
+               or 
+               a: function(){
+                   
+               }
+           }
+        解决方法: 在外边创建好函数,在for循环里面指向就可以了
+        function a(){}
+        for(){
+            a: a
+            or 
+            a = a
+        }
+        */
+    ```
+4. 转移密集型任务到Web Worker
+    1. js是以独立的单线程运行的,浏览器至少有3个线程:js引擎线程,GUI渲染线程,控制交互的浏览器时间触发线程,每轮迭代中进行大量循环就会出现界面锁定问题,异步函数调用就不会,Web Worker就是解决这个问题,允许加速一个运行的特定密集代码的新进程,使得原来线程不会锁定浏览器,相当于后台运行
+    2. 创建: var workerThread = new Worker("filename.js")
+    3. 监听: workerThread.addEventListener("message",function(e){console.log(e.data);},false);
+    4. 发消息: workerThread.postMessage("")
+    5. 立即停止运行: workerThread.terminate()
+    6. 关闭: workerThread.close();
