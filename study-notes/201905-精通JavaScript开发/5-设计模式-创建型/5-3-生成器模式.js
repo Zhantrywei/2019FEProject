@@ -1,3 +1,4 @@
+// 定义一个生成器类
 function FormBuilder() {}
 FormBuilder.prototype = {
     fields: [],
