@@ -250,10 +250,10 @@
         replace = string.replace(regEx,"_");    // "The _reat _scape"
     ```
     1. replace方法详解
-        1. $$: "Hello World".replace(/o/g,"$$"); // "Hell$ W$rld"
-        2. $&: "Hello World".replace(/o/g, "v$&a");  // "Hellvoa Wvoarld" 主要用于在找到的字符串前后添加
-        3. $\`: "Hello World".replace(/o/g,"$\`");  // "HellHell WHello Wrld" 用匹配到的前边部分代替匹配到的值
-        4. $\': "Hello World".replace(/o/g,"$\'");  // "Hell World Wrldrld
+        1. \$\$: "Hello World".replace(/o/g,"$$"); // "Hell$ W$rld"
+        2. \$&: "Hello World".replace(/o/g, "v$&a");  // "Hellvoa Wvoarld" 主要用于在找到的字符串前后添加
+        3. \$\`: "Hello World".replace(/o/g,"$\`");  // "HellHell WHello Wrld" 用匹配到的前边部分代替匹配到的值
+        4. \$\': "Hello World".replace(/o/g,"$\'");  // "Hell World Wrldrld
         5. $1,$2,...: "Hello World".replace(/(o)(\s)/g,"$1$1$2")    // "Helloo World" 小括号分组时，实现提取出特定表达式所匹配的子字符串,先把匹配的拿出来，然后把对应的分组放进去
         6. replace(正则，函数): 每匹配一个就会执行一次函数，并传入所匹配的子字符串，会使用函数的返回值替换原子字符串
             ```js

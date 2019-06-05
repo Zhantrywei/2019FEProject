@@ -26,6 +26,7 @@ var FormFieldFactory = {
     }
 };
 
+// 定义TextField类，创建input text 表单元素
 function TextField(displayText) {
     this.displayText = displayText;
 }
@@ -37,6 +38,7 @@ TextField.prototype.getElement = function() {
     return textField;
 };
 
+// 定义EmailField类，创建input email表单元素
 function EmailField(displayText) {
     this.displayText = displayText;
 }
@@ -48,6 +50,7 @@ EmailField.prototype.getElement = function() {
     return emailField;
 };
 
+// 定义ButtonField类，创建button表单元素
 function ButtonField(displayText) {
     this.displayText = displayText;
 }
@@ -59,6 +62,8 @@ ButtonField.prototype.getElement = function() {
     return button;
 };
 
+// 使用工厂模式
+// 使用工厂创建文本表单域，邮箱表单域，提交按钮，我们不需要知道底层的那些类或他们特定输入就可以创建表单域。FormFieldFactory对该方法进行了抽象
 var textField = FormFieldFactory.makeField({
         type: "text",
         displayText: "Enter the first line of your address"
@@ -82,3 +87,4 @@ window.addEventListener(
     },
     false
 );
+// 当需要在代码的其余所有部分通过屏蔽较为复杂的对象创建方法来简化某些特定对象的创建过程时，使用工厂模式最合适。
