@@ -1,4 +1,4 @@
-// 定义一个生成器类
+// 定义一个生成器类,在其原型上根据步骤实现定义不同的方法，包括初始化，增删查改等
 function FormBuilder() {}
 FormBuilder.prototype = {
     fields: [],
@@ -60,6 +60,8 @@ ButtonField.prototype.getElement = function() {
     return button;
 };
 
+
+// 使用生成器模式
 var formBuilder = new FormBuilder(),form;
 formBuilder.addField("text","Enter the first line of your address");
 formBuilder.addField("email","Enter your")
