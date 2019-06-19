@@ -47,3 +47,112 @@
        17. Promises：原生支持
            1.  一个Promise是一个等待被异步执行的对象，当它执行完成时，其状态会变成resolved或者rejected。
            2.  每一个Promise都有一个.then方法，接受两个参数，第一个是处理resolved状态的回调，第二个是处理rejected状态的对调
+2. ES6环境搭建
+   1. 浏览器端：Chrome58（2017.1）、Edge14（2016.8）、Firefox54（2017.3）、Safari10（2016.7）、Opera55（2018.8）、IE7~11基本不支持ES6
+   2. Node.js环境对ES6支持度最高
+   3. webpack：现代JS的静态模块打包器(module bundler)，构建一个依赖关系图(dependency graph)，将所有模块打包成一个或多个bundle
+      1. 入口(entry)
+      2. 输出(output)
+      3. loader：webpack自身只能处理JS，loader能将所有类型的文件转换为webpack能够处理的模块
+           ```js
+               const config = {
+                   entry: "./src/main.js",
+                   output: {
+                       filename: "bundle.js",
+                       path: path.resolve(__dirname, 'dist')
+                   },
+                   module: {
+                       rules: [
+                           {
+                               test: /\.js$/,
+                               exclude: /node_modules/,
+                               loader: "babel-loader",
+                               options: [
+                                   presets: ["env"]
+                               ]
+                           }
+                       ]
+                   }
+               }
+           ```
+      4. 插件(plugins)：loader被用于转换某些类型的模块，而插件可以做更多，可以打包优化、压缩、定义环境变量等等
+           ```js
+                const HtmlWebpackPlugin = require('html-webpack-plugin');
+                const webpack = require('webpack');
+                const config = {
+                    module: {
+                        rules: [
+                            {
+                                test: /\.js$/,
+                                exclude: /node_modules/,
+                                loader: "babel-loader"
+                            }
+                        ]
+                    },
+                    plugins: [
+                        new HtmlWebpackPlugin({templatae: "./src/index.html"})
+                    ]
+                }
+           ```
+   4. gulp：基于流的自动化构建工具，具有易于使用、构建快速、插件高质和易于学习的特点，常用于轻量级的工程中
+      1. 安装
+            ```bash
+                npm install --global gulp
+                npm install --save-dev gulp
+            ```
+      2. config
+            ```js
+                // gulpconfig.js
+                const gulp = require('gulp');
+                const uglify = require("gulp-uglify");
+                gulp.task('default', function() {
+                    gulp.src('./src/main.js')
+                        .pipe(uglify())
+                        .pipe(gulp.dest('./dist'));
+                })
+            ```
+      3. 运行
+            ```bash
+                gulp
+            ```
+3. ES6 - let & const
+   1. let：块级作用域定义、不能重复声明、for循环都能保留住变量、不存在变量提升
+   2. const：声明只读变量，全大写，声明后不能改变，声明必须初始化、暂时性死区   
+        ```js
+            var PI = "a";
+            if(true){
+                console.log(PI);  // ReferenceError: PI is not defined
+                const PI = "3.1415926";
+            }
+        ```
+   3. const保证的不是变量的值不变，是保证变量指向内存地址所保存的数据不允许改动，所以使用 const 声明复杂类型对象时要慎重。
+4. ES6 - 解构赋值：针对数组或者对象进行模式匹配，然后对其中的变量进行赋值
+5. ES6 - Symbol：独一无二的值，最大的用法用来定义对象的唯一属性名
+   1. Symbol 作为对象属性名时不能用.运算符，要用方括号。
+   2. Symbol 值作为属性名时，该属性是公有属性不是私有属性，可以在类的外部访问。但是不会出现在 for...in 、 for...of 的循环中，也不会被 Object.keys() 、 Object.getOwnPropertyNames() 返回。如果要读取到一个对象的 Symbol 属性，可以通过 Object.getOwnPropertySymbols() 和 Reflect.ownKeys() 取到。
+   3. Symbol.for()类似单例模式，避免创建冲突，会登记在全局环境
+   4. Symbol.keyFor()返回一个已登记Symbol类型的key，用于检测该字段是否已用
+   5. Symbol可以显式转为字符串，可以被强制转换为bool类型，没有包装类，JSON.stringify()不会转出，Object强转还是本身                 
+        ```js
+            var smy = Symbol();
+            smy.description = "描述";
+            console.log(smy.description);   // undefined
+            console.log(String(smy));       // "Symbol()"
+            console.log(smy.toString());       // "Symbol()"
+            console.log(Boolean(smy));       // true
+            console.log(!smy);       // false
+            console.log(JSON.stringify({[Symbol("foo")]: "foo"}));  // "{}"
+            console.log(Boolean(smy));       // true
+            console.log(!smy);       // false
+            console.log(Object(sym));   // 是一个Symbol类型的对象，有个description为Symbol(这里传入的值)
+            console.log(Object(sym).description);   // 是一个Symbol类型的对象，有个description为Symbol(这里传入的值),undefined
+            var smy1 = Symbol("smy1");
+            console.log(Object(sym).description);   // "smy1"            
+        ```
+6. ES6 - Map & Set
+   1. Maps & Objects 区别
+      1. Object的key为字符串或者Symbol，但Map可以是任意值
+      2. Object的键值是无序的，Map是有序的（FIFO：先进先出原则，队列）
+      3. Map能从size知道个数，Object不行，只能手算
+      4. Object 都有自己的原型，原型链上的键名有可能和你自己在对象上的设置的键名产生冲突
+
