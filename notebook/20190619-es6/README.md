@@ -150,9 +150,19 @@
             console.log(Object(sym).description);   // "smy1"            
         ```
 6. ES6 - Map & Set
-   1. Maps & Objects 区别
-      1. Object的key为字符串或者Symbol，但Map可以是任意值
-      2. Object的键值是无序的，Map是有序的（FIFO：先进先出原则，队列）
-      3. Map能从size知道个数，Object不行，只能手算
-      4. Object 都有自己的原型，原型链上的键名有可能和你自己在对象上的设置的键名产生冲突
+   1. Map
+      1. Maps & Objects 区别
+         1. Object的key为字符串或者Symbol，但Map可以是任意值
+         2. Object的键值是无序的，Map是有序的（FIFO：先进先出原则，队列）
+         3. Map能从size知道个数，Object不行，只能手算
+         4. Object 都有自己的原型，原型链上的键名有可能和你自己在对象上的设置的键名产生冲突
+      2. Map.prototype.[func] -> get、set、forEach
+   2. Set
+      1. Set 对象允许你存储任何类型的唯一值，无论是原始值或者是对象引用。
+      2. +0 和 -0、undefined、NaN
+      3. 数组去重、交集并集差集
+7. ES6 - Reflect & Proxy
+   1. Reflect
+      1. 
+   2. Proxy
 
