@@ -147,8 +147,49 @@ function demoProxyHas() {
 
 // construct(target, args)
 // 用于拦截 new 命令。返回值必须为对象。
-function demoProxyConstruct(){
+function demoProxyConstruct() {
     let handler = {
-        construct: function(target,args,newTarget)
+        construct: function(target, args, newTarget) {
+            console.log("handle construct");
+            return Reflect.construct(target, args, newTarget);
+        }
+    };
+    class exam {
+        construct(name) {
+            this.name = name;
+        }
     }
+    let proxy = new Proxy(exam, handler);
+    var tom = new proxy("Tom");
+    console.log("TCL: demoProxyConstruct -> tom", tom);
 }
+// demoProxyConstruct();
+
+// deleteProperty(target,propKey)
+// 用于拦截 delete 操作，如果这个方法抛出错误或者返回 false ，propKey 属性就无法被 delete 命令删除。
+function demoProxyDelete() {
+    // 用于拦截 Object.definePro若目标对象不可扩展，增加目标对象上不存在的属性会报错；若属性不可写或不可配置，则不能改变这些属性
+    let handler = {
+        defineProperty: function(target, propKey, propDesc) {
+            console.log("handle defineProperty");
+            return true;
+        }
+    };
+    let target = {};
+    let proxy = new Proxy(target, handler);
+    proxy.name = "Tom";
+    console.log("TCL: demoProxyDelete -> target", target);
+
+    // defineProperty 返回值为false，添加属性操作无效
+    let handler1 = {
+        defineProperty: function(target, propKey, propDesc) {
+            console.log("handle defineProperty");
+            return false;
+        }
+    };
+    let target1 = {};
+    let proxy1 = new Proxy(target1, handler1);
+    proxy1.name = "Jerry";
+    console.log("TCL: demoProxyDelete -> target1", target1);
+}
+demoProxyDelete();

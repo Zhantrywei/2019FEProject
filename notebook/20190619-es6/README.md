@@ -165,4 +165,178 @@
    1. Reflect
       1. 
    2. Proxy
+8. ES6 - 字符串
+   1. 子串的识别: includes(),startsWidth(),endsWith(),都是返回布尔值
+   2. 字符串重复: repeat(),如果是负数和Infinity会报错
+   3. 字符串补全: padStart(int[,str]),padEnd(int[,str]),常用于补全位数
+   4. 模板字符串: \`${变量名}\`
+9. ES6 - 数值
+   1. 二进制: 0b | 0B
+   2. 八进制: 0o | 0O
+   3. 常量: 
+      1. Number.EPSILON表示1与大于1的最小浮点数之间的差
+           ```js
+               // 测试数值是否在误差范围内
+               console.log("0.1 + 0.2 === 0.3:", 0.1 + 0.2 === 0.3);  // false
+               console.log("Number.EPSILON: 0.1 + 0.2 === 0.3:", (Math.abs(0.1 - 0.3 + 0.2) < Number.EPSILON));  // true
+               // Number.EPSILON属性特性
+               // writable: false
+               // enumerable: false
+               // configurable: false
+           ```
+      2. 最大/最小安全数
+         1. 安全整数范围的上限,2的53次方-1: Number.MAX_SAFE_INTEGER
+         2. 安全整数范围的下限,2的53次方-1的负数: Number.MIN_SAFE_INTEGER
+         3. 属性特性:
+            1. writable: false
+            2. enumerable: false
+            3. configurable: false
+   4. Number.isFinite(): 检查一个数值是否为有限的(finite),即不是Infinity,非数值都返回false,还有NaN,Infinity,-Infinity
+   5. Number.isNaN(): 检查一个值是否为NaN,全局isNaN会进行非数值向数值转换,而Number.isNaN()不会,非NaN都会返回false
+   6. 全局移植到Number对象的方法
+      1. parseInt => Number.parseInt
+      2. parseFloat => Number.parseFloat
+   7. Number对象新方法
+      1. Number.isInteger: 1.0结果和1一样为true
+         1. 精度超过53个二进制位时,由于第54位及后面的位被丢弃,会产生误判
+            ```js
+               Number.isInteger(1.0000000000000001) // true
+            ```
+         2. 一个数值的绝对值小于 Number.MIN_VALUE（5E-324），即小于 JavaScript 能够分辨的最小值，会被自动转为 0，也会产生误判
+            ```js
+               Number.isInteger(5E-324); // false
+               Number.isInteger(5E-325); // true
+            ```
+      2. Number.isSafeInteger(): 用于判断数值是否在安全范围内
+            ```js
+               Number.isSafeInteger(Number.MIN_SAFE_INTEGER - 1); // false
+               Number.isSafeInteger(Number.MAX_SAFE_INTEGER + 1); // false
+            ```
+   8. Math对象的扩展
+      1. Math.cbrt(): 立方根
+      2. Math.imul(): 两个数以 32 位带符号整数形式相乘的结果，返回的也是一个 32 位的带符号整数。
+         ```js
+            // 大多数情况下，结果与 a * b 相同 
+            Math.imul(1, 2);   // 2
+             
+            // 用于正确返回大数乘法结果中的低位数值
+            Math.imul(0x7fffffff, 0x7fffffff); // 1
+         ```
+      3. Math.hypot(): 用于计算所有参数的平方和的平方根
+      4. Math.clz32(): 用于返回数字的32位无符号整数形式的前导0的个数,参数为小数只考虑整数部分,空值或非数值,转化为数值再进行计算
+      5. Math.trunc(): 用于返回数字的整数部分,能判断符号,转换为数值在处理,空值和其他为NaN
+      6. Math.fround(): 用于获取数字的32位单精度浮点数形式。
+      7. Math.sign(): 判断数字的符号,1正,-1负,0|-0
+      8. Math.expm1(): 用于计算 e 的 x 次方减 1 的结果，即 Math.exp(x) - 1
+      9. Math.log1p(x): 用于计算1 + x 的自然对数，即 Math.log(1 + x) 
+      10. Math.log10(x): 用于计算以 10 为底的 x 的对数
+      11. Math.log2(x): 用于计算 2 为底的 x 的对数
+      12. 双曲函数
+          1. Math.sinh(x): 用于计算双曲正弦
+          2. Math.cosh(x): 用于计算双曲余弦
+          3. Math.tanh(x): 用于计算双曲正切
+          4. Math.asinh(x): 用于计算反双曲正弦
+          5. Math.acosh(x): 用于计算反双曲余弦
+          6. Math.atanh(x): 用于计算反双曲正切
+      13. 指数运算符
+          ```js
+              1 ** 2; // 1
+              // 右结合，从右至左计算
+              2 ** 2 ** 3; // 256
+              // **=
+              let exam = 2;
+              exam ** = 2; // 4
+          ```
+10. ES6 - 对象
+    1. 简写
+    2. Generator函数前面加*
+    3. 属性名表达式[]
+    4. 对象拓展运算符
+    5. 新方法:
+        1. Object.assign(target,source_1,...): 用于将源对象的所有可枚举属性复制到目标对象中 - 浅拷贝
+        2. Object.is(value1,value2): 用于比较两个值是否严格相等, 与===基本类似
+11. ES6 - 数组
+    1. 创建: 
+       1. Array.of()
+       2. Array.from(arrayLike[, mapFn[, thisArg]])将类数组对象或可迭代对象转化为数组
+          1. arrayLike: 想要转换的类数组对象或可迭代对象
+          2. mapFn: 可选，map 函数，用于对每个元素进行处理，放入数组的是处理后的元素
+          3. thisArg: 可选，用于指定 map 函数执行时的 this 对象
+          4. 类数组对象: 一个类数组对象必须含有 length 属性，且元素属性名必须是数值或者可转换为数值的字符
+          5. 转换可迭代对象
+             1. 转换map
+             2. 转换set
+             3. 转换字符串
+    2. 查找
+       1. find(): 查找数组中符合条件的元素,若有多个符合条件的元素，则返回第一个元素,可以传回调函数
+       2. findIndex(): 查找数组中符合条件的元素索引，若有多个符合条件的元素，则返回第一个元素索引,可以传回调函数
+    3. 填充
+       1. fill(填充值, 起始索引, 结束索引): 将一定范围索引的数组元素内容填充为单个指定的值
+       2. copyWithin(修改起始索引, 用来覆盖数据的起始索引, 被用来覆盖的数据的结束索引): 将一定范围索引的数组元素修改为此数组另一指定范围索引的元素
+    4. 遍历
+       1. entries(): 遍历键值对
+       2. keys(): 遍历键名
+       3. values(): 遍历键值
+    5. 包含
+       1. includes(包含的指定值, 可选搜索的起始索引): 数组是否包含指定值
+    6. 嵌套数组转一维数组
+       1. flat()
+       2. flatmap(遍历函数(当前元素,当前索引,原数组), 指定遍历函数中的this指向): 先对数组中每个元素进行了的处理，再对数组执行 flat() 方法
+    7. 数组缓冲区,内存中的一段地址,定型数组的基础, 只可修改其中的数据, 不可修改大小
+       1. 创建数组缓冲区
+          ```js
+						 let buffer = new ArrayBuffer(10);
+						 buffer.byteLength // 10
+						 let buffer1 = buffer.slice(1,3);
+						 console.log(buffer1.byteLength);	// 2
+          ```
+       2. 视图: 用来操作内存的接口,可以操作数组缓冲区或缓冲区字节的子集,并按照其中一种数值数据类型来读取和写入数据
+          1. DataView 类型是一种通用的数组缓冲区视图,其支持所有8种数值型数据类型
+             ```js
+                // 默认 DataView 可操作数组缓冲区全部内容
+                let buffer = new ArrayBuffer(10);
+                    dataView = new DataView(buffer); 
+                dataView.setInt8(0,1);
+                console.log(dataView.getInt8(0)); // 1
+                 
+                // 通过设定偏移量(参数2)与长度(参数3)指定 DataView 可操作的字节范围
+                let buffer1 = new ArrayBuffer(10);
+                    dataView1 = new DataView(buffer1, 0, 3);
+                dataView1.setInt8(5,1); // RangeError
+             ```
+    8. 定型数组: 数组缓冲区的特定类型的视图,可以强制使用特定的数据类型，而不是使用通用的 DataView 对象来操作数组缓冲区。
+       1. 创建
+          ```js
+             let buffer = new ArrayBuffer(10),
+                 view = new Int8Array(buffer);
+             console.log(view.byteLength); // 10
 
+             let view32 = new Int32Array(10);
+             console.log(view32.byteLength); // 40
+             console.log(view32.length);     // 10
+              
+             // 不传参则默认长度为0
+             // 在这种情况下数组缓冲区分配不到空间，创建的定型数组不能用来保存数据
+             let view1 = new Int32Array();
+             console.log(view1.byteLength); // 0
+             console.log(view1.length);     // 0
+              
+             // 可接受参数包括定型数组、可迭代对象、数组、类数组对象
+             let arr = Array.from({
+               0: '1',
+               1: '2',
+               2: 3,
+               length: 3
+             });
+             let view2 = new Int16Array([1, 2]),
+                 view3 = new Int32Array(view2),
+                 view4 = new Int16Array(new Set([1, 2, 3])),
+                 view5 = new Int16Array([1, 2, 3]),
+                 view6 = new Int16Array(arr);
+             console.log(view2 .buffer === view3.buffer); // false
+             console.log(view4.byteLength); // 6
+             console.log(view5.byteLength); // 6
+             console.log(view6.byteLength); // 6
+          ```
+       2. 注意: length不可写, 开始用entries(),keys(),values()进行迭代
+		9. 扩展运算符...
