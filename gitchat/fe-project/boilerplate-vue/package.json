@@ -1,0 +1,17 @@
+{
+  "name": "boilerplate-vue",
+  "version": "1.0.0",
+  "description": "a template about vue when I study FE in gitchat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "boilerplate",
+    "vue",
+    "study",
+    "gitchat"
+  ],
+  "author": "try",
+  "license": "ISC"
+}
