@@ -4,11 +4,9 @@
   "description": "study babel",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "babel",
-    "study"
+    "babel"
   ],
   "author": "try",
   "license": "ISC"
