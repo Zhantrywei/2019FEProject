@@ -31,10 +31,37 @@
     ```
     > [如何在Ubuntu 18.04上安装GCC编译器](https://www.linuxidc.com/Linux/2019-06/159059.htm)
 
-## 电子书
-1. 详见pdf目录
 
 ## 视频教程
 1. [慕课网C免费教程](https://www.imooc.com/course/list?c=c)
 2. [慕课网C++免费教程](https://www.imooc.com/course/list?c=cplusplus)
 
+## 编译文件
+1. *.c - 源代码
+2. *.h - 头文件
+3. *.i - 预编译(把伪指令转换为实际指令)
+    ```bash
+        gcc -E hello.c -o hello.i
+    ```
+4. *.s - 编译(把预编译好的文件转化为汇编语言)
+    ```bash
+        gcc -S hello.c -o hello.s
+        # 或者
+        gcc -S hello.i -o hello.s
+    ```
+5. *.o - 汇编(二进制文件)
+    ```bash
+        gcc -c hello.c -o hello.o
+        # 或者
+        gcc -c hello.i -o hello.o
+        # 或者
+        gcc -c hello.s -o hello.o
+    ```
+    ```
+6. *.exe | *.out - 链接(可执行文件)
+    ```bash
+        gcc hello.c -o hello.exe    # windows默认:链接成其他文件需要对应的软件打开，如.mp4之类的，但是打开可能是失败的
+        gcc hello.c -o hello.out    # linux默认:好像连接成其他的也可以执行
+    ```
+
+## make - Makefile文件
