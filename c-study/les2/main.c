@@ -10,5 +10,6 @@ int main()
 	int minNum = min(a1,a2);
 	printf("The Max Num: %d\n",maxNum);
 	printf("The Min Num: %d\n",minNum);
+	getchar();
 	return 0;
 }
