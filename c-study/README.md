@@ -65,3 +65,29 @@
     ```
 
 ## make - Makefile文件
+1. win10找到MinGW/bin目录,把mingw32-make.exe复制一份改成make.exe
+2. 编写规则
+   ```
+        Targets...: Prerequisites...
+        Command
+        Command
+        ...
+   ```
+
+## main函数的return和参数(arguments)
+1. return 0表示无错误,正常执行,其他为非正常执行,错误码; echo $?
+2. int main(int argc, char *argv[]): argc(arguments count) & argv(arguments value)
+
+## 标准输入流、标准输出流、标准错误流
+1. stdin: 默认是键盘
+2. stdout: 默认是显示器
+3. stderr: 输出错误，main函数return非0
+
+## 重定向
+1. \>\> 追加输出
+2. \> 覆盖输出
+3. \< 输入
+
+## 管道的应用
+1. a | b：把a的输出结果当作b的输入
+2. 多余的printf函数和scanf函数不对应也会出现问题
