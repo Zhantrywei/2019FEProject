@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Address-Demo</title>
+        <link
+            href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <style>
+            .table {
+                display: table;
+                border-collapse: collapse;
+                text-align: center;
+            }
+            .table-row {
+                display: table-row;
+            }
+            .table-cell {
+                display: table-cell;
+                border: 1px solid #ccc;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div class="address-container">
+                <div class="row">
+                    <div class="col-md-6 col-lg-6">
+                        <h2>地址填写</h2>
+                        <textarea
+                            class="form-control"
+                            rows="40"
+                            v-model="addressText"
+                        ></textarea>
+                    </div>
+                    <div class="col-md-6 col-lg-6">
+                        <div class="table" v-show="addressTable.length>0">
+                            <div class="table-row">
+                                <div class="table-cell">序号</div>
+                                <div class="table-cell">姓名</div>
+                                <div class="table-cell">联系电话</div>
+                                <div class="table-cell">收货地址</div>
+                            </div>
+                            <div
+                                class="table-row"
+                                v-for="(item,index) in addressTable"
+                                :key="index"
+                            >
+                                <div class="table-cell">{{ item.index }}</div>
+                                <div class="table-cell">{{ item.name }}</div>
+                                <div class="table-cell">{{ item.phone }}</div>
+                                <div class="table-cell">{{ item.address }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+        <script>
+            var vm = new Vue({
+                el: "#app",
+                data: {
+                    addressText:
+                        "1.李三   123456789   广东省东莞市大朗镇\n2.123456798  张三   广东省深圳市\n3.广东省广州市  123654987 王五"
+                    // addressTable: []
+                },
+                computed: {
+                    addressTable() {
+                        let addressArr = this.addressText
+                            .split("\n")
+                            .map(item => item.replace(/\s+/g, ";"));
+                        let addressArrTemp = addressArr.map(item => {
+                            let itemObj = {};
+                            let itemArr = item.split(".");
+                            // debugger
+                            itemObj.index = Number(itemArr[0]);
+                            let itemStrArr = itemArr[1].split(";");
+                            itemObj.strArr = itemStrArr;
+                            itemStrArr.map(itemStrArrItem => {
+                                if (!isNaN(Number(itemStrArrItem))) {
+                                    itemObj.phone = itemStrArrItem;
+                                } else {
+                                    if (
+                                        itemStrArrItem.indexOf("省") > -1 ||
+                                        itemStrArrItem.indexOf("市") > -1
+                                    ) {
+                                        itemObj.address = itemStrArrItem;
+                                    } else {
+                                        itemObj.name = itemStrArrItem;
+                                    }
+                                }
+                            });
+                            return itemObj;
+                        });
+                        console.log(addressArrTemp);
+                        return addressArrTemp;
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
