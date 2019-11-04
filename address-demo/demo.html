@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>导出</title>
+        <!--引入js-xlsx-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.1/xlsx.full.min.js"></script>
+        <!--引入jQuery-->
+        <script src="http://code.jquery.com/jquery-1.4.1.min.js"></script>
+        <script>
+            //将localStorage的数据库中的key遍历出来供选择
+            function loadFileName() {
+                for (var i = 0; i < window.localStorage.length; i++) {
+                    $("#selectFile").append(
+                        "<option value=" +
+                            window.localStorage.key(i) +
+                            ">" +
+                            window.localStorage.key(i) +
+                            "</option>"
+                    );
+                }
+            }
+        </script>
+    </head>
+    <body onload="loadFileName()">
+        <div id="export">
+            <p>导出数据</p>
+            <select id="selectFile">
+                <option value="null">请选择文件</option>
+            </select>
+            <button onclick="exportData()">确定</button>
+        </div>
+
+        <script>
+            function exportData() {
+                var getFile = document.getElementById("selectFile");
+                getFile.options.selected = true;
+                var fileName = getFile.value;
+
+                if (fileName == "null") {
+                    alert("请先选择文件");
+                    return 0;
+                }
+                var str = window.localStorage.getItem(fileName);
+
+                var sheet0 = XLSX.utils.json_to_sheet(JSON.parse(str));
+                var wopts = {
+                    bookType: "xlsx",
+                    bookSST: false,
+                    type: "binary"
+                };
+                var wb = { SheetNames: ["Sheet0"], Sheets: {}, Props: {} };
+                wb.Sheets["Sheet0"] = sheet0; //转化成workbooks形式。
+                var wbout = XLSX.write(wb, wopts);
+                //转换流形式
+                function s2ab(s) {
+                    var buf = new ArrayBuffer(s.length);
+                    var view = new Uint8Array(buf);
+                    for (var i = 0; i != s.length; ++i)
+                        view[i] = s.charCodeAt(i) & 0xff;
+                    return buf;
+                }
+                /* the saveAs call downloads a file on the local machine */
+                //自定义保存文件方式,原项目采用的是cordova的文件写入方式，此演示只用模拟浏览器下载的形式
+                saveAs(
+                    new Blob([s2ab(wbout)], { type: "" }),
+                    fileName + ".xlsx"
+                );
+            }
+            function saveAs(obj, fileName) {
+                var tmpa = document.createElement("a");
+                tmpa.download = fileName || "下载";
+                tmpa.href = URL.createObjectURL(obj);
+                tmpa.click();
+                setTimeout(function() {
+                    URL.revokeObjectURL(obj);
+                }, 100);
+            }
+        </script>
+    </body>
+</html>

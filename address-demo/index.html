@@ -30,6 +30,7 @@
                 <div class="row">
                     <div class="col-md-6 col-lg-6">
                         <h2>地址填写</h2>
+                        <input type="file" @change="importf" />
                         <textarea
                             class="form-control"
                             rows="40"
@@ -37,6 +38,10 @@
                         ></textarea>
                     </div>
                     <div class="col-md-6 col-lg-6">
+                        <!-- <button
+                            v-show="canExport"
+                            @click="downloadExl"
+                        ></button> -->
                         <div class="table" v-show="addressTable.length>0">
                             <div class="table-row">
                                 <div class="table-cell">序号</div>
@@ -59,13 +64,58 @@
                 </div>
             </div>
         </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.1/xlsx.full.min.js"></script>
         <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
         <script>
+            /*
+                FileReader共有4种读取方法：
+                1.readAsArrayBuffer(file)：将文件读取为ArrayBuffer。
+                2.readAsBinaryString(file)：将文件读取为二进制字符串
+                3.readAsDataURL(file)：将文件读取为Data URL
+                4.readAsText(file, [encoding])：将文件读取为文本，encoding缺省值为'UTF-8'
+            */
+            var wb; //读取完成的数据
+            var rABS = false; //是否将文件读取为二进制字符串
+            function fixdata(data) {
+                //文件流转BinaryString
+                var o = "",
+                    l = 0,
+                    w = 10240;
+                for (; l < data.byteLength / w; ++l)
+                    o += String.fromCharCode.apply(
+                        null,
+                        new Uint8Array(data.slice(l * w, l * w + w))
+                    );
+                o += String.fromCharCode.apply(
+                    null,
+                    new Uint8Array(data.slice(l * w))
+                );
+                return o;
+            }
             var vm = new Vue({
                 el: "#app",
                 data: {
                     addressText:
-                        "1.李三   123456789   广东省东莞市大朗镇\n2.123456798  张三   广东省深圳市\n3.广东省广州市  123654987 王五"
+                        "1.李三   123456789   广东省东莞市大朗镇\n2.123456798  张三   广东省深圳市\n3.广东省广州市  123654987 王五",
+                    canExport: false,
+                    excelTitle: [
+                        {
+                            序号: "index",
+                            寄件人: "sName",
+                            寄件电话: "sPhone",
+                            寄件地址: "sAddress",
+                            收件人: "aName",
+                            收件电话: "aPhone",
+                            规格: "specification",
+                            收件地址: "aAddress",
+                            果种: "fruitType",
+                            价格: "price",
+                            重量: "weight",
+                            备注: "remark",
+                            发货: "delivery",
+                            货运方式: "deliveryMethod"
+                        }
+                    ]
                     // addressTable: []
                 },
                 computed: {
@@ -86,9 +136,15 @@
                                 } else {
                                     if (
                                         itemStrArrItem.indexOf("省") > -1 ||
-                                        itemStrArrItem.indexOf("市") > -1
+                                        itemStrArrItem.indexOf("市") > -1 ||
+                                        itemStrArrItem.indexOf("镇") > -1 ||
+                                        itemStrArrItem.indexOf("区") > -1
                                     ) {
-                                        itemObj.address = itemStrArrItem;
+                                        if (itemStrArrItem.length > 5) {
+                                            itemObj.address = itemStrArrItem;
+                                        } else {
+                                            itemObj.name = itemStrArrItem;
+                                        }
                                     } else {
                                         itemObj.name = itemStrArrItem;
                                     }
@@ -98,6 +154,80 @@
                         });
                         console.log(addressArrTemp);
                         return addressArrTemp;
+                    }
+                },
+                methods: {
+                    importf: function(event) {
+                        // console.log(event);
+                        let obj = event.target;
+                        if (!obj.files) {
+                            return;
+                        }
+                        var f = obj.files[0];
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            var data = e.target.result;
+                            if (rABS) {
+                                wb = XLSX.read(btoa(fixdata(data)), {
+                                    //手动转化
+                                    type: "base64"
+                                });
+                            } else {
+                                wb = XLSX.read(data, {
+                                    type: "binary"
+                                });
+                            }
+                            console.log(wb)
+                            //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
+                            //wb.Sheets[Sheet名]获取第一个Sheet的数据
+                            var table = XLSX.utils.sheet_to_json(
+                                wb.Sheets[wb.SheetNames[1]]
+                            );
+                            // console.table(table);
+                            table[2].__EMPTY_3 = "Try";
+                            table[2].__EMPTY_4 = "13631782911";
+                            table[2].__EMPTY_6 = "广东省深圳市";
+                            var wopts = {
+                                bookType: "xlsx",
+                                bookSST: false,
+                                type: "binary"
+                            };
+                            var wb = {
+                                SheetNames: ["Sheet0"],
+                                Sheets: {},
+                                Props: {}
+                            };
+                            wb.Sheets["Sheet0"] = table; //转化成workbooks形式。
+                            var wbout = XLSX.write(wb, wopts);
+                            //转换流形式
+                            function s2ab(s) {
+                                var buf = new ArrayBuffer(s.length);
+                                var view = new Uint8Array(buf);
+                                for (var i = 0; i != s.length; ++i)
+                                    view[i] = s.charCodeAt(i) & 0xff;
+                                return buf;
+                            }
+                            function saveAs(obj, fileName) {
+                                var tmpa = document.createElement("a");
+                                tmpa.download = fileName || "下载";
+                                tmpa.href = URL.createObjectURL(obj);
+                                tmpa.click();
+                                setTimeout(function() {
+                                    URL.revokeObjectURL(obj);
+                                }, 100);
+                            }
+                            /* the saveAs call downloads a file on the local machine */
+                            //自定义保存文件方式,原项目采用的是cordova的文件写入方式，此演示只用模拟浏览器下载的形式
+                            saveAs(
+                                new Blob([s2ab(wbout)], { type: "" }),
+                                f.name
+                            );
+                        };
+                        if (rABS) {
+                            reader.readAsArrayBuffer(f);
+                        } else {
+                            reader.readAsBinaryString(f);
+                        }
                     }
                 }
             });
