@@ -27,22 +27,17 @@
     <body>
         <div id="app">
             <div class="address-container">
-                <div class="row">
-                    <div class="col-md-6 col-lg-6">
-                        <h2>地址填写</h2>
-                        <input type="file" @change="importf" />
-                        <textarea
-                            class="form-control"
-                            rows="40"
-                            v-model="addressText"
-                        ></textarea>
-                    </div>
-                    <div class="col-md-6 col-lg-6">
-                        <!-- <button
+                <h2>地址填写</h2>
+                <textarea
+                    class="form-control"
+                    rows="20"
+                    v-model="addressText"
+                ></textarea>
+                <!-- <button
                             v-show="canExport"
                             @click="downloadExl"
                         ></button> -->
-                        <div class="table" v-show="addressTable.length>0">
+                <!-- <div class="table" v-show="addressTable.length>0">
                             <div class="table-row">
                                 <div class="table-cell">序号</div>
                                 <div class="table-cell">姓名</div>
@@ -59,80 +54,87 @@
                                 <div class="table-cell">{{ item.phone }}</div>
                                 <div class="table-cell">{{ item.address }}</div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </div> -->
+                <button @click="downloadTable">下载</button>
+                <table class="table" id="table">
+                    <tr>
+                        <td colspan="14">可可鲜橙订单表</td>
+                    </tr>
+                    <tr>
+                        <td>序号</td>
+                        <td>寄件人</td>
+                        <td>寄件电话</td>
+                        <td>寄件地址</td>
+                        <td>收件人</td>
+                        <td>收件电话</td>
+                        <td>规格</td>
+                        <td>收件人详细地址</td>
+                        <td>果种</td>
+                        <td>价格</td>
+                        <td>重量</td>
+                        <td>备注</td>
+                        <td>发货</td>
+                        <td>货运方式</td>
+                    </tr>
+                    <tr v-for="(rowItem,index) in dataList" :key="index">
+                        <td>{{ rowItem.index }}</td>
+                        <td>可可鲜橙</td>
+                        <td>13790151805</td>
+                        <td>江西省赣州市会昌县晓龙乡桂林村</td>
+                        <td>{{ rowItem.aName }}</td>
+                        <td>{{ rowItem.aPhone }}</td>
+                        <td></td>
+                        <td>{{ rowItem.aAddress }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
             </div>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.1/xlsx.full.min.js"></script>
         <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+        <script src="./js/districts.js"></script>
         <script>
-            /*
-                FileReader共有4种读取方法：
-                1.readAsArrayBuffer(file)：将文件读取为ArrayBuffer。
-                2.readAsBinaryString(file)：将文件读取为二进制字符串
-                3.readAsDataURL(file)：将文件读取为Data URL
-                4.readAsText(file, [encoding])：将文件读取为文本，encoding缺省值为'UTF-8'
-            */
-            var wb; //读取完成的数据
-            var rABS = false; //是否将文件读取为二进制字符串
-            function fixdata(data) {
-                //文件流转BinaryString
-                var o = "",
-                    l = 0,
-                    w = 10240;
-                for (; l < data.byteLength / w; ++l)
-                    o += String.fromCharCode.apply(
-                        null,
-                        new Uint8Array(data.slice(l * w, l * w + w))
-                    );
-                o += String.fromCharCode.apply(
-                    null,
-                    new Uint8Array(data.slice(l * w))
-                );
-                return o;
+            function formatCity(city) {
+                var cityList = [];
+                for (var key in city) {
+                    for (var innerKey in city[key]) {
+                        cityList.push(city[key][innerKey]);
+                    }
+                }
+                return cityList;
             }
+            var cityList = formatCity(city);
+            // console.log("TCL: cityList", cityList);
+        </script>
+        <script>
             var vm = new Vue({
                 el: "#app",
                 data: {
                     addressText:
-                        "1.李三   123456789   广东省东莞市大朗镇\n2.123456798  张三   广东省深圳市\n3.广东省广州市  123654987 王五",
-                    canExport: false,
-                    excelTitle: [
-                        {
-                            序号: "index",
-                            寄件人: "sName",
-                            寄件电话: "sPhone",
-                            寄件地址: "sAddress",
-                            收件人: "aName",
-                            收件电话: "aPhone",
-                            规格: "specification",
-                            收件地址: "aAddress",
-                            果种: "fruitType",
-                            价格: "price",
-                            重量: "weight",
-                            备注: "remark",
-                            发货: "delivery",
-                            货运方式: "deliveryMethod"
-                        }
-                    ]
-                    // addressTable: []
+                        "",
+                    canExport: false
                 },
                 computed: {
-                    addressTable() {
+                    dataList() {
+                        var _this = this;
+                        if(this.addressText.indexOf("\n") === -1){
+                            return [];
+                        }
                         let addressArr = this.addressText
                             .split("\n")
-                            .map(item => item.replace(/\s+/g, ";"));
+                            .map(item => item.replace(/，|。|\s+/g, ";"));
                         let addressArrTemp = addressArr.map(item => {
                             let itemObj = {};
-                            let itemArr = item.split(".");
-                            // debugger
-                            itemObj.index = Number(itemArr[0]);
-                            let itemStrArr = itemArr[1].split(";");
+                            let itemStrArr = item.split(";");
                             itemObj.strArr = itemStrArr;
                             itemStrArr.map(itemStrArrItem => {
                                 if (!isNaN(Number(itemStrArrItem))) {
-                                    itemObj.phone = itemStrArrItem;
+                                    itemObj.aPhone = itemStrArrItem?itemStrArrItem:itemObj.aPhone;
                                 } else {
                                     if (
                                         itemStrArrItem.indexOf("省") > -1 ||
@@ -141,93 +143,41 @@
                                         itemStrArrItem.indexOf("区") > -1
                                     ) {
                                         if (itemStrArrItem.length > 5) {
-                                            itemObj.address = itemStrArrItem;
+                                            if (
+                                                cityList.find(function(item) {
+                                                    return itemStrArrItem.match(
+                                                        item
+                                                    );
+                                                })
+                                            ) {
+                                                itemObj.aAddress = itemStrArrItem;
+                                            } else {
+                                                itemObj.aName = itemStrArrItem;
+                                            }
                                         } else {
-                                            itemObj.name = itemStrArrItem;
+                                            itemObj.aName = itemStrArrItem;
                                         }
                                     } else {
-                                        itemObj.name = itemStrArrItem;
+                                        itemObj.aName = itemStrArrItem;
                                     }
                                 }
                             });
                             return itemObj;
                         });
-                        console.log(addressArrTemp);
-                        return addressArrTemp;
+                        console.log(addressArrTemp);                        
+                        return addressArrTemp.map(function(item,index){
+                            item.index = index+1;
+                            return item;
+                        });
                     }
                 },
                 methods: {
-                    importf: function(event) {
-                        // console.log(event);
-                        let obj = event.target;
-                        if (!obj.files) {
-                            return;
-                        }
-                        var f = obj.files[0];
-                        var reader = new FileReader();
-                        reader.onload = function(e) {
-                            var data = e.target.result;
-                            if (rABS) {
-                                wb = XLSX.read(btoa(fixdata(data)), {
-                                    //手动转化
-                                    type: "base64"
-                                });
-                            } else {
-                                wb = XLSX.read(data, {
-                                    type: "binary"
-                                });
-                            }
-                            console.log(wb)
-                            //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
-                            //wb.Sheets[Sheet名]获取第一个Sheet的数据
-                            var table = XLSX.utils.sheet_to_json(
-                                wb.Sheets[wb.SheetNames[1]]
-                            );
-                            // console.table(table);
-                            table[2].__EMPTY_3 = "Try";
-                            table[2].__EMPTY_4 = "13631782911";
-                            table[2].__EMPTY_6 = "广东省深圳市";
-                            var wopts = {
-                                bookType: "xlsx",
-                                bookSST: false,
-                                type: "binary"
-                            };
-                            var wb = {
-                                SheetNames: ["Sheet0"],
-                                Sheets: {},
-                                Props: {}
-                            };
-                            wb.Sheets["Sheet0"] = table; //转化成workbooks形式。
-                            var wbout = XLSX.write(wb, wopts);
-                            //转换流形式
-                            function s2ab(s) {
-                                var buf = new ArrayBuffer(s.length);
-                                var view = new Uint8Array(buf);
-                                for (var i = 0; i != s.length; ++i)
-                                    view[i] = s.charCodeAt(i) & 0xff;
-                                return buf;
-                            }
-                            function saveAs(obj, fileName) {
-                                var tmpa = document.createElement("a");
-                                tmpa.download = fileName || "下载";
-                                tmpa.href = URL.createObjectURL(obj);
-                                tmpa.click();
-                                setTimeout(function() {
-                                    URL.revokeObjectURL(obj);
-                                }, 100);
-                            }
-                            /* the saveAs call downloads a file on the local machine */
-                            //自定义保存文件方式,原项目采用的是cordova的文件写入方式，此演示只用模拟浏览器下载的形式
-                            saveAs(
-                                new Blob([s2ab(wbout)], { type: "" }),
-                                f.name
-                            );
-                        };
-                        if (rABS) {
-                            reader.readAsArrayBuffer(f);
-                        } else {
-                            reader.readAsBinaryString(f);
-                        }
+                    downloadTable: function() {
+                        var table = document.getElementById("table");
+                        var wb = XLSX.utils.table_to_book(table, {
+                            sheet: "test"
+                        });
+                        return XLSX.writeFile(wb, "test.xlsx");
                     }
                 }
             });
