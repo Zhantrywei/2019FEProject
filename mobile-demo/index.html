@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no" />
+    <meta name="x5-orientation" content="landscape" />
+    <meta name="screen-orientation" content="landscape" />
+    <meta name="browsermode" content="application" />
+    <title>landscape page</title>
+</head>
+<body>
+    <div id="app">
+        <div class="main"></div>
+        <div class="fixedContainer"></div>
+    </div>
+    <script>
+        document.querySelector(".main").innerHTML += navigator.userAgent;
+        document.querySelector(".main").innerHTML += "<br>"+window.screen.width+"-"+window.screen.height+":"+window.devicePixelRatio;
+    </script>
+</body>
+</html>
