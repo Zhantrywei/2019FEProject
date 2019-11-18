@@ -1,16 +1,11 @@
 {
-    "name": "zfjy-webpack",
-    "version": "1.0.0",
-    "description": "zfjy webpack study",
-    "main": "main.js",
-    "scripts": {
-        "build": "webpack",
-        "dev": "webpack-dev-server"
-    },
-    "license": "MIT",
-    "devDependencies": {
-        "webpack": "^4.36.1",
-        "webpack-cli": "^3.3.6",
-        "webpack-dev-server": "^3.7.2"
-    }
+  "name": "zfjy-webpack",
+  "version": "1.0.0",
+  "description": "study webpack by zfjy",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  }
 }
