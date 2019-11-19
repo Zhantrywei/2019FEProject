@@ -1,0 +1,9 @@
+$bg: red;
+
+div {
+    width: 100px;
+    height: 100px;
+    background: $bg;
+    transform-origin: left top;
+    transform: scale(2);
+}

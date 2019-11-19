@@ -149,3 +149,149 @@
         })
     ];
     ```
+
+## loader configuration
+1. css/scss/less/stylus
+   1. without loader : [error] You may need an appropriate loader to handle this file type
+   2. loader order: down-up, right-left
+   3. css: css-loader & style-loader
+        ```bash
+            yarn add css-loader style-loader -D
+        ```
+        ```js
+            // webpack.base.js
+            module: {
+               rules: [
+                 {
+                   test: /\.css$/,
+                   use: ['style-loader', 'css-loader']
+                 }
+                 // {
+                 //   test: /\.css$/,
+                 //   use: 'style-loader'
+                 // },
+                 // {
+                 //   test: /\.css$/,
+                 //   use: 'css-loader'
+                 // }
+               ]
+            }
+        ```
+   4. scss: node-sass & sass-loader - https://sass-lang.com/ & https://www.sass.hk/
+        ```bash
+            yarn add node-sass sass-loader -D
+        ```
+        ```js
+            // webpack.base.js
+             module: {
+               rules: [
+                 {
+                   test: /\.css$/,
+                   use: [
+                     'style-loader',
+                     {
+                       loader: 'css-loader',
+                       options: {
+                         importLoaders: 1 // 如果通过import引入了其他文件，这里的数字指的是后边的一个loader，不推荐css里边再引入scss
+                       }
+                     },
+                     'sass-loader'
+                   ]
+                 },
+                 // {
+                 //   test: /\.css$/,
+                 //   use: 'style-loader'
+                 // },
+                 // {
+                 //   test: /\.css$/,
+                 //   use: 'css-loader'
+                 // }
+                 {
+                   test: /\.scss$/,
+                   use: ['style-loader', 'css-loader', 'sass-loader']
+                 }
+               ]
+             },
+        ```
+   5. less: less & less-loader - http://lesscss.org/ & http://lesscss.cn/
+        ```bash
+            yarn add less less-loader -D
+        ```
+        ```js
+            // webpack.base.js        
+            {
+                test: /\.less$/,
+                use: ['style-loader', 'css-loader', 'less-loader']
+            }
+        ```
+   6. stylus: stylus & stylus-loader - http://stylus-lang.com/ & https://stylus.bootcss.com/
+        ```bash
+            yarn add stylus stylus-loader -D
+        ```
+        ```js
+            // webpack.base.js        
+            {
+                test: /\.less$/,
+                use: ['style-loader', 'css-loader', 'stylus-loader']
+            }
+        ```
+   7. postcss: postcss-loader & autoprefixer - compatible some css3 in different browser
+        ```bash
+            yarn add postcss-loader autoprefixer -D
+        ```
+        ```js
+            // webpack.base.js   
+            {
+             test: /\.css$/,
+             use: [
+               'style-loader',
+               {
+                 loader: 'css-loader',
+                 options: {
+                   importLoaders: 2 // 如果通过import引入了其他文件，这里的数字指的是后边的两个loader，不推荐css里边再引入scss
+                 }
+               },
+               'postcss-loader',
+               'sass-loader'
+             ]
+            },
+            // postcss.config.js
+            module.exports = {
+              plugins: [require('autoprefixer')]
+            }
+            // package.json - recommend
+            "browserslist": [
+             "cover 99.5%"
+            ]
+
+        ```
+   8. mini-css-extract-plugin: build mode production to load sync with js - 把css提取出来一个css文件
+        ```bash
+            yarn add mini-css-extract-plugin -D
+        ```
+        ```js
+            // webpack.base.js   
+            {
+             test: /\.css$/,
+             use: [
+               isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+               {
+                 loader: 'css-loader',
+                 options: {
+                   importLoaders: 2 // 如果通过import引入了其他文件，这里的数字指的是后边的两个loader，不推荐css里边再引入scss
+                 }
+               },
+               'postcss-loader',
+               'sass-loader'
+             ]
+            },
+            plugins: [
+               !isDev &&
+                 new MiniCssExtractPlugin({
+                   filename: 'css/main.css'    //生成css的命名
+                 })]
+              // 如果是生产环境就分隔生成css文件
+        ```
+2. img & icon
+3. js
+4. react & vue
