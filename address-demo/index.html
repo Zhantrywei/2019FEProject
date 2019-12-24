@@ -100,87 +100,88 @@
         <script src="./js/districts.js"></script>
         <script>
             function formatCity(city) {
-                var cityList = [];
+                var cityList = []
                 for (var key in city) {
                     for (var innerKey in city[key]) {
-                        cityList.push(city[key][innerKey]);
+                        cityList.push(city[key][innerKey])
                     }
                 }
-                return cityList;
+                return cityList
             }
-            var cityList = formatCity(city);
+            var cityList = formatCity(city)
             // console.log("TCL: cityList", cityList);
         </script>
         <script>
             var vm = new Vue({
-                el: "#app",
+                el: '#app',
                 data: {
-                    addressText:
-                        "",
+                    addressText: '',
                     canExport: false
                 },
                 computed: {
                     dataList() {
-                        var _this = this;
-                        if(this.addressText.indexOf("\n") === -1){
-                            return [];
+                        var _this = this
+                        if (this.addressText.indexOf('\n') === -1) {
+                            return []
                         }
                         let addressArr = this.addressText
-                            .split("\n")
-                            .map(item => item.replace(/，|。|\s+/g, ";"));
+                            .split('\n')
+                            .map(item => item.replace(/，|。|\s+/g, ';'))
                         let addressArrTemp = addressArr.map(item => {
-                            let itemObj = {};
-                            let itemStrArr = item.split(";");
-                            itemObj.strArr = itemStrArr;
+                            let itemObj = {}
+                            let itemStrArr = item.split(';')
+                            itemObj.strArr = itemStrArr
                             itemStrArr.map(itemStrArrItem => {
                                 if (!isNaN(Number(itemStrArrItem))) {
-                                    itemObj.aPhone = itemStrArrItem?itemStrArrItem:itemObj.aPhone;
+                                    itemObj.aPhone = itemStrArrItem
+                                        ? itemStrArrItem
+                                        : itemObj.aPhone
                                 } else {
                                     if (
-                                        itemStrArrItem.indexOf("省") > -1 ||
-                                        itemStrArrItem.indexOf("市") > -1 ||
-                                        itemStrArrItem.indexOf("镇") > -1 ||
-                                        itemStrArrItem.indexOf("区") > -1
+                                        itemStrArrItem.indexOf('省') > -1 ||
+                                        itemStrArrItem.indexOf('市') > -1 ||
+                                        itemStrArrItem.indexOf('镇') > -1 ||
+                                        itemStrArrItem.indexOf('区') > -1
                                     ) {
                                         if (itemStrArrItem.length > 5) {
                                             if (
                                                 cityList.find(function(item) {
                                                     return itemStrArrItem.match(
                                                         item
-                                                    );
+                                                    )
                                                 })
                                             ) {
-                                                itemObj.aAddress = itemStrArrItem;
+                                                itemObj.aAddress = itemStrArrItem
                                             } else {
-                                                itemObj.aName = itemStrArrItem;
+                                                itemObj.aName = itemStrArrItem
                                             }
                                         } else {
-                                            itemObj.aName = itemStrArrItem;
+                                            itemObj.aName = itemStrArrItem
                                         }
                                     } else {
-                                        itemObj.aName = itemStrArrItem;
+                                        itemObj.aName = itemStrArrItem
                                     }
                                 }
-                            });
-                            return itemObj;
-                        });
-                        console.log(addressArrTemp);                        
-                        return addressArrTemp.map(function(item,index){
-                            item.index = index+1;
-                            return item;
-                        });
+                            })
+                            return itemObj
+                        })
+                        console.log(addressArrTemp)
+                        return addressArrTemp.map(function(item, index) {
+                            item.index = index + 1
+                            return item
+                        })
                     }
                 },
                 methods: {
                     downloadTable: function() {
-                        var table = document.getElementById("table");
+                        var table = document.getElementById('table')
                         var wb = XLSX.utils.table_to_book(table, {
-                            sheet: "test"
-                        });
-                        return XLSX.writeFile(wb, "test.xlsx");
+                            sheet: 'test'
+                        })
+                        return XLSX.writeFile(wb, 'test.xlsx')
                     }
                 }
-            });
+            })
         </script>
     </body>
 </html>
